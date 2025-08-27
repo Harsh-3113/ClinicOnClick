@@ -1,39 +1,47 @@
 // Main JavaScript file for ClinicOnClick
 document.addEventListener('DOMContentLoaded', function() {
+    // Cache common selectors for performance
+    const cached = {
+        navbar: document.querySelector('.navbar'),
+        navbarToggler: document.querySelector('.navbar-toggler'),
+        navbarCollapse: document.querySelector('.navbar-collapse'),
+        heroSection: document.querySelector('.hero-section')
+    };
 
     // Initialize all components
-    initNavbar();
+    initNavbar(cached);
     initAnimations();
     initFormValidation();
-    initScrollEffects();
+    initScrollEffects(cached);
 
     console.log('🚀 ClinicOnClick application initialized successfully!');
 });
 
 // Navbar functionality
-function initNavbar() {
-    const navbar = document.querySelector('.navbar');
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.querySelector('.navbar-collapse');
+function initNavbar(cached) {
+    const { navbar, navbarToggler, navbarCollapse } = cached;
 
     // Navbar scroll effect
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', throttle(function() {
+        if (!navbar) return;
         if (window.scrollY > 100) {
             navbar.classList.add('navbar-scrolled');
         } else {
             navbar.classList.remove('navbar-scrolled');
         }
-    });
+    }, 100));
 
     // Mobile navbar close on link click
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (navbarCollapse.classList.contains('show')) {
+    const navContainer = document.querySelector('.navbar-nav');
+    if (navContainer) {
+        navContainer.addEventListener('click', function(e) {
+            const target = e.target.closest('.nav-link');
+            if (!target) return;
+            if (navbarCollapse && navbarCollapse.classList.contains('show') && navbarToggler) {
                 navbarToggler.click();
             }
         });
-    });
+    }
 }
 
 // Initialize animations
@@ -91,7 +99,7 @@ function validateForm(form) {
 }
 
 // Scroll effects
-function initScrollEffects() {
+function initScrollEffects(cached) {
     // Smooth scrolling for anchor links
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
     anchorLinks.forEach(link => {
@@ -110,15 +118,14 @@ function initScrollEffects() {
     });
 
     // Parallax effect for hero section
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', throttle(function() {
         const scrolled = window.pageYOffset;
-        const heroSection = document.querySelector('.hero-section');
-
+        const heroSection = cached.heroSection || document.querySelector('.hero-section');
         if (heroSection) {
             const rate = scrolled * -0.5;
             heroSection.style.transform = `translateY(${rate}px)`;
         }
-    });
+    }, 16));
 }
 
 // Notification system
@@ -168,6 +175,7 @@ function hideLoading(element, originalText) {
 
 // API helper functions
 const API = {
+    // Note: use concise names and consistent casing
     asyncget(url) {
         try {
             const response = await fetch(url);
