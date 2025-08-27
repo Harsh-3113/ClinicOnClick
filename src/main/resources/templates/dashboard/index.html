@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Dashboard - ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        .dash-hero{background:linear-gradient(135deg,#e8f0ff,#ffffff);padding-top:6rem;padding-bottom:3rem}
+        .dash-card{transition:transform .15s ease, box-shadow .15s ease}
+        .dash-card:hover{transform:translateY(-2px);box-shadow:0 0.5rem 1rem rgba(0,0,0,.15)}
+    </style>
+    </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/"><i class="fas fa-heartbeat me-2"></i>ClinicOnClick</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/appointments">Appointments</a>
+                <a class="nav-link" href="/doctors">Doctors</a>
+                <a class="nav-link" href="/pharmacy">Pharmacy</a>
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/contact">Contact</a>
+                <a class="nav-link" sec:authorize="isAuthenticated()" href="/logout">Logout</a>
+                <a class="nav-link" sec:authorize="!isAuthenticated()" href="/login">Login</a>
+                <a class="nav-link" sec:authorize="!isAuthenticated()" href="/register">Signup</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="dash-hero">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="display-5 mb-2">Welcome back</h1>
+                    <p class="text-muted mb-0">Quick actions and shortcuts</p>
+                </div>
+                <a href="/appointments" class="btn btn-primary btn-lg"><i class="fas fa-plus me-2"></i>Book Appointment</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="/appointments" class="text-decoration-none text-dark">
+                    <div class="card dash-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-calendar-check fa-2x text-primary me-3"></i>
+                                <h5 class="mb-0">My Appointments</h5>
+                            </div>
+                            <p class="text-muted mb-0">View and manage your appointments</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/doctors" class="text-decoration-none text-dark">
+                    <div class="card dash-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-md fa-2x text-primary me-3"></i>
+                                <h5 class="mb-0">Find Doctors</h5>
+                            </div>
+                            <p class="text-muted mb-0">Browse specialties and book a visit</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/pharmacy" class="text-decoration-none text-dark">
+                    <div class="card dash-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-pills fa-2x text-primary me-3"></i>
+                                <h5 class="mb-0">Pharmacy</h5>
+                            </div>
+                            <p class="text-muted mb-0">Order medicines and essentials</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light text-center py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 ClinicOnClick</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+

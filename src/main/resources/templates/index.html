@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-heartbeat me-2"></i>ClinicOnClick
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/appointments"><i class="fas fa-calendar-check me-1"></i>APPOINTMENT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pharmacy"><i class="fas fa-pills me-1"></i>PHARMACY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/doctors"><i class="fas fa-user-md me-1"></i>DOCTOR</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about"><i class="fas fa-info-circle me-1"></i>ABOUT</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>LOG IN</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>SIGNUP</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/dashboard"><i class="fas fa-gauge-high me-1"></i>DASHBOARD</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/logout"><i class="fas fa-right-from-bracket me-1"></i>LOGOUT</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="display-3 fw-bold text-dark mb-4">
+                        <i class="fas fa-heartbeat text-primary me-3"></i>ClinicOnClick
+                    </h1>
+                    <p class="lead text-dark mb-4 fs-5">
+                        "Change is terrifying for people who feel immune to it by virtue of status, divine appointment, or imagined irreplaceability."
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                        <a href="/register" class="btn btn-primary btn-lg px-4 py-3">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="/about" class="btn btn-outline-primary btn-lg px-4 py-3">
+                            <i class="fas fa-info-circle me-2"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="hero-image-container">
+                        <img src="/images/hero-doctor.svg" alt="Healthcare Professional" class="img-fluid hero-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-5 fw-bold text-primary">Why Choose ClinicOnClick?</h2>
+                    <p class="lead text-muted">Comprehensive healthcare management at your fingertips</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-calendar-check fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Easy Appointments</h4>
+                        <p class="text-muted">Book appointments with your preferred doctors in just a few clicks</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-user-md fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Expert Doctors</h4>
+                        <p class="text-muted">Connect with qualified healthcare professionals across specialties</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-pills fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold">Pharmacy Services</h4>
+                        <p class="text-muted">Order medicines and healthcare products from trusted pharmacies</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary">500+</h3>
+                        <p class="text-muted">Happy Patients</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary">50+</h3>
+                        <p class="text-muted">Expert Doctors</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary">1000+</h3>
+                        <p class="text-muted">Appointments</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="stat-item">
+                        <h3 class="display-4 fw-bold text-primary">24/7</h3>
+                        <p class="text-muted">Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-heartbeat text-primary me-2"></i>ClinicOnClick</h5>
+                    <p class="mb-0">Your trusted healthcare companion</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2024 ClinicOnClick. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

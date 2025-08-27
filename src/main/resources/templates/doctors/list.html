@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Doctors - ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-stethoscope me-2"></i>ClinicOnClick
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link active" href="/doctors">Doctors</a>
+                <a class="nav-link" href="/appointments">Appointments</a>
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/contact">Contact</a>
+                <a class="nav-link" href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-user-md me-3"></i>Our Doctors
+                </h1>
+                <p class="lead text-muted">Meet our qualified and experienced medical professionals</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/appointments/book" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <form th:action="@{/doctors/search}" method="get" class="row g-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" name="query" 
+                                           placeholder="Search doctors by name or specialization" 
+                                           th:value="${query}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="specialization">
+                                    <option value="">All Specializations</option>
+                                    <option value="Cardiology" th:selected="${specialization == 'Cardiology'}">Cardiology</option>
+                                    <option value="Dermatology" th:selected="${specialization == 'Dermatology'}">Dermatology</option>
+                                    <option value="Neurology" th:selected="${specialization == 'Neurology'}">Neurology</option>
+                                    <option value="Orthopedics" th:selected="${specialization == 'Orthopedics'}">Orthopedics</option>
+                                    <option value="Pediatrics" th:selected="${specialization == 'Pediatrics'}">Pediatrics</option>
+                                    <option value="Psychiatry" th:selected="${specialization == 'Psychiatry'}">Psychiatry</option>
+                                    <option value="Surgery" th:selected="${specialization == 'Surgery'}">Surgery</option>
+                                    <option value="General Medicine" th:selected="${specialization == 'General Medicine'}">General Medicine</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="availability">
+                                    <option value="">All Availability</option>
+                                    <option value="available">Available Now</option>
+                                    <option value="weekdays">Weekdays Only</option>
+                                    <option value="weekends">Weekends Only</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Filter Buttons -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/doctors" class="btn btn-outline-primary">
+                        <i class="fas fa-users me-2"></i>All Doctors
+                    </a>
+                    <a href="/doctors/available" class="btn btn-outline-success">
+                        <i class="fas fa-check-circle me-2"></i>Available Now
+                    </a>
+                    <a href="/doctors/specialization/Cardiology" class="btn btn-outline-info">
+                        <i class="fas fa-heart me-2"></i>Cardiology
+                    </a>
+                    <a href="/doctors/specialization/Dermatology" class="btn btn-outline-warning">
+                        <i class="fas fa-allergies me-2"></i>Dermatology
+                    </a>
+                    <a href="/doctors/specialization/Pediatrics" class="btn btn-outline-success">
+                        <i class="fas fa-baby me-2"></i>Pediatrics
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctors Grid -->
+        <div class="row">
+            <div class="col-12">
+                <div class="row g-4" id="doctorsGrid">
+                    <div th:each="doctor : ${doctors}" class="col-lg-4 col-md-6">
+                        <div class="card h-100 shadow-sm border-0 doctor-card" 
+                             th:data-specialization="${doctor.specialization}"
+                             th:data-available="${doctor.available}">
+                            <div class="card-body text-center p-4">
+                                <!-- Doctor Avatar -->
+                                <div class="mb-3">
+                                    <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto">
+                                        <i class="fas fa-user-md fa-2x"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Doctor Info -->
+                                <h5 class="card-title fw-bold mb-2" 
+                                    th:text="${doctor != null and doctor.user != null ? (doctor.user.firstName + ' ' + doctor.user.lastName) : 'Doctor Name'}">Doctor Name</h5>
+                                <p class="text-primary mb-2" th:text="${doctor != null and doctor.specialization != null ? doctor.specialization : 'Specialization'}">Specialization</p>
+                                
+                                <!-- Availability Status -->
+                                <div class="mb-3">
+                                    <span th:if="${doctor.available}" 
+                                          class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Available
+                                    </span>
+                                    <span th:unless="${doctor.available}" 
+                                          class="badge bg-secondary">
+                                        <i class="fas fa-clock me-1"></i>Unavailable
+                                    </span>
+                                </div>
+                                
+                                <!-- Doctor Details -->
+                                <div class="text-muted small mb-3">
+                                    <div class="mb-1">
+                                        <i class="fas fa-graduation-cap me-2"></i>
+                                        <span th:text="${doctor != null and doctor.education != null ? doctor.education : 'Education'}">Education</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <i class="fas fa-briefcase me-2"></i>
+                                        <span th:text="${(doctor != null && doctor.experience != null ? doctor.experience : '0') + ' years'}">Experience</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <i class="fas fa-id-card me-2"></i>
+                                        <span th:text="${doctor != null and doctor.licenseNumber != null ? doctor.licenseNumber : 'N/A'}">License</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Doctor Bio -->
+                                <p class="card-text text-muted small mb-3" 
+                                   th:text="${#strings.abbreviate(doctor.bio, 100)}">Doctor bio...</p>
+                                
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/doctors/{id}(id=${doctor.id})}" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-2"></i>View Profile
+                                    </a>
+                                    <a th:if="${doctor.available}" 
+                                       th:href="@{/appointments/book?doctorId={id}(id=${doctor.id})}" 
+                                       class="btn btn-success btn-sm">
+                                        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div th:if="${#lists.isEmpty(doctors)}" class="text-center py-5">
+                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No doctors found</h5>
+                    <p class="text-muted">Try adjusting your search criteria</p>
+                    <a href="/doctors" class="btn btn-primary">
+                        <i class="fas fa-undo me-2"></i>View All Doctors
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mt-5">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-user-md fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(doctors)}">0</h4>
+                        <p class="mb-0">Total Doctors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(doctors.?[available == true])}">0</h4>
+                        <p class="mb-0">Available Now</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-stethoscope fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(doctors)}">0</h4>
+                        <p class="mb-0">Specializations</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-star fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(doctors.?[experience != null])}">0</h4>
+                        <p class="mb-0">Profiles with Experience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 ClinicOnClick. Built with Spring Boot & Bootstrap.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Filter functionality for availability
+        document.querySelector('select[name="availability"]').addEventListener('change', function() {
+            const availability = this.value;
+            filterDoctorsByAvailability(availability);
+        });
+
+        function filterDoctorsByAvailability(availability) {
+            const doctorCards = document.querySelectorAll('.doctor-card');
+            doctorCards.forEach(card => {
+                const isAvailable = card.dataset.available === 'true';
+                
+                if (availability === 'available' && !isAvailable) {
+                    card.style.display = 'none';
+                } else if (availability === 'weekdays' || availability === 'weekends') {
+                    // This could be enhanced with actual availability data
+                    card.style.display = '';
+                } else {
+                    card.style.display = '';
+                }
+            });
+        }
+
+        // Add hover effects
+        document.querySelectorAll('.doctor-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Appointments - ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-stethoscope me-2"></i>ClinicOnClick
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/doctors">Doctors</a>
+                <a class="nav-link active" href="/appointments">Appointments</a>
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/contact">Contact</a>
+                <a class="nav-link" href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-calendar-check me-3"></i>Appointments
+                </h1>
+                <p class="lead text-muted">Manage and schedule your medical appointments</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/appointments/book" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Book Appointment
+                </a>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${cancelled}" class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            Appointment cancelled successfully
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Appointments List -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-list me-2"></i>All Appointments
+                                </h5>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="filterAll">All</button>
+                                    <button type="button" class="btn btn-outline-success btn-sm" id="filterScheduled">Scheduled</button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" id="filterConfirmed">Confirmed</button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" id="filterInProgress">In Progress</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="filterCompleted">Completed</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" id="filterCancelled">Cancelled</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="appointmentsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Doctor</th>
+                                        <th>Date & Time</th>
+                                        <th>Status</th>
+                                        <th>Reason</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="appointment : ${appointments}" th:data-status="${appointment.status}">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold" th:text="${appointment.user != null ? (appointment.user.firstName + ' ' + appointment.user.lastName) : 'Unknown Patient'}">Patient Name</div>
+                                                    <small class="text-muted" th:text="${appointment.user != null ? appointment.user.email : 'unknown@example.com'}">email@example.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold" th:text="${appointment.doctor != null && appointment.doctor.user != null ? (appointment.doctor.user.firstName + ' ' + appointment.doctor.user.lastName) : 'Unknown Doctor'}">Doctor Name</div>
+                                                    <small class="text-muted" th:text="${appointment.doctor != null ? appointment.doctor.specialization : 'N/A'}">Specialization</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold" th:text="${appointment.appointmentDateTime != null ? #temporals.format(appointment.appointmentDateTime, 'MMM dd, yyyy') : '—'}">Date</div>
+                                            <small class="text-muted" th:text="${appointment.appointmentDateTime != null ? #temporals.format(appointment.appointmentDateTime, 'hh:mm a') : ''}">Time</small>
+                                        </td>
+                                        <td>
+                                            <span th:class="${'badge ' + 
+                                                (appointment.status == 'SCHEDULED' ? 'bg-warning' : '') +
+                                                (appointment.status == 'CONFIRMED' ? ' bg-info' : '') +
+                                                (appointment.status == 'IN_PROGRESS' ? ' bg-primary' : '') +
+                                                (appointment.status == 'COMPLETED' ? ' bg-success' : '') +
+                                                (appointment.status == 'CANCELLED' ? ' bg-danger' : '') +
+                                                (appointment.status == 'NO_SHOW' ? ' bg-secondary' : '')}">
+                                                <span th:text="${appointment.status != null ? appointment.status : 'UNKNOWN'}">Status</span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="text-truncate d-inline-block" style="max-width: 150px;" 
+                                                  th:text="${appointment.reason}" title="${appointment.reason}">Reason</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a th:href="@{/appointments/{id}(id=${appointment.id})}" 
+                                                   class="btn btn-outline-primary" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <button th:if="${appointment.status == 'SCHEDULED' || appointment.status == 'CONFIRMED'}"
+                                                        th:onclick="'cancelAppointment(' + ${appointment.id} + ')'"
+                                                        class="btn btn-outline-danger" title="Cancel Appointment">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div th:if="${#lists.isEmpty(appointments)}" class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No appointments found</h5>
+                            <p class="text-muted">Start by booking your first appointment</p>
+                            <a href="/appointments/book" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Book Appointment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(appointments)}">0</h4>
+                        <p class="mb-0">Total Appointments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-clock fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(appointments.?[status == 'SCHEDULED'])}">0</h4>
+                        <p class="mb-0">Scheduled</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-user-md fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(appointments.?[status == 'IN_PROGRESS'])}">0</h4>
+                        <p class="mb-0">In Progress</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white text-center">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h4 th:text="${#lists.size(appointments.?[status == 'COMPLETED'])}">0</h4>
+                        <p class="mb-0">Completed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 ClinicOnClick. Built with Spring Boot & Bootstrap.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Filter functionality
+        document.querySelectorAll('[id^="filter"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const status = this.id.replace('filter', '').toUpperCase();
+                filterAppointments(status);
+                
+                // Update active button
+                document.querySelectorAll('[id^="filter"]').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function filterAppointments(status) {
+            const rows = document.querySelectorAll('#appointmentsTable tbody tr');
+            rows.forEach(row => {
+                if (status === 'ALL' || row.dataset.status === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function cancelAppointment(id) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/appointments/${id}/cancel`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Initialize with all appointments visible
+        document.getElementById('filterAll').classList.add('active');
+    </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e3f2fd;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bbdefb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="coat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5f5f5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bg)" rx="20"/>
+  
+  <!-- Doctor's Coat -->
+  <path d="M 150 120 L 150 300 L 250 300 L 250 120 Z" fill="url(#coat)" stroke="#e0e0e0" stroke-width="2"/>
+  
+  <!-- Coat Collar -->
+  <path d="M 150 120 L 200 100 L 250 120" fill="none" stroke="#e0e0e0" stroke-width="3"/>
+  
+  <!-- Stethoscope -->
+  <ellipse cx="200" cy="180" rx="25" ry="15" fill="none" stroke="#424242" stroke-width="3"/>
+  <ellipse cx="200" cy="180" rx="15" ry="8" fill="none" stroke="#424242" stroke-width="2"/>
+  
+  <!-- Doctor's Head -->
+  <circle cx="200" cy="80" r="30" fill="#ffccbc"/>
+  
+  <!-- Hair -->
+  <path d="M 170 60 Q 200 50 230 60 Q 240 70 230 80 Q 200 90 170 80 Q 160 70 170 60" fill="#8d6e63"/>
+  
+  <!-- Eyes -->
+  <circle cx="190" cy="75" r="3" fill="#424242"/>
+  <circle cx="210" cy="75" r="3" fill="#424242"/>
+  
+  <!-- Smile -->
+  <path d="M 190 85 Q 200 90 210 85" fill="none" stroke="#424242" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Arms -->
+  <ellipse cx="140" cy="200" rx="15" ry="25" fill="#ffccbc"/>
+  <ellipse cx="260" cy="200" rx="15" ry="25" fill="#ffccbc"/>
+  
+  <!-- Hands -->
+  <circle cx="140" cy="225" r="12" fill="#ffccbc"/>
+  <circle cx="260" cy="225" r="12" fill="#ffccbc"/>
+  
+  <!-- Medical Cross -->
+  <rect x="185" y="240" width="30" height="6" fill="#f44336" rx="3"/>
+  <rect x="200" y="227" width="6" height="30" fill="#f44336" rx="3"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="120" cy="150" r="8" fill="#81c784" opacity="0.6"/>
+  <circle cx="280" cy="170" r="6" fill="#64b5f6" opacity="0.6"/>
+  <circle cx="130" cy="280" r="5" fill="#ffb74d" opacity="0.6"/>
+  <circle cx="270" cy="250" r="7" fill="#ba68c8" opacity="0.6"/>
+  
+  <!-- Text -->
+  <text x="200" y="350" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#1976d2" font-weight="bold">
+    Healthcare Professional
+  </text>
+</svg>
