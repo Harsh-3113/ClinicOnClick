@@ -55,42 +55,42 @@ public class DataInitializer implements CommandLineRunner {
 
         // Create Doctor Users
         User doctor1 = new User();
-        doctor1.setUsername("dr.smith");
-        doctor1.setEmail("dr.smith@cliniconclick.com");
+        doctor1.setUsername("Dr. Anand");
+        doctor1.setEmail("dr.anand@cliniconclick.com");
         doctor1.setPassword(passwordEncoder.encode("doctor123"));
-        doctor1.setFirstName("John");
-        doctor1.setLastName("Smith");
+        doctor1.setFirstName("Tulika");
+        doctor1.setLastName("Anand");
         // roles removed
         doctor1.setPhoneNumber("+1-555-0002");
         userRepository.save(doctor1);
 
         User doctor2 = new User();
-        doctor2.setUsername("dr.johnson");
-        doctor2.setEmail("dr.johnson@cliniconclick.com");
+        doctor2.setUsername("Dr. Mehta");
+        doctor2.setEmail("dr.mehta@cliniconclick.com");
         doctor2.setPassword(passwordEncoder.encode("doctor123"));
-        doctor2.setFirstName("Sarah");
-        doctor2.setLastName("Johnson");
+        doctor2.setFirstName("Sandeep");
+        doctor2.setLastName("Mehta");
         // roles removed
         doctor2.setPhoneNumber("+1-555-0003");
         userRepository.save(doctor2);
 
         // Create Patient Users
         User patient1 = new User();
-        patient1.setUsername("john.doe");
-        patient1.setEmail("john.doe@email.com");
+        patient1.setUsername("kushal.verma");
+        patient1.setEmail("kushal.verma@email.com");
         patient1.setPassword(passwordEncoder.encode("patient123"));
-        patient1.setFirstName("John");
-        patient1.setLastName("Doe");
+        patient1.setFirstName("Kushal");
+        patient1.setLastName("Verma");
         // roles removed
         patient1.setPhoneNumber("+1-555-0004");
         userRepository.save(patient1);
 
         User patient2 = new User();
-        patient2.setUsername("jane.smith");
-        patient2.setEmail("jane.smith@email.com");
+        patient2.setUsername("vikram.singh");
+        patient2.setEmail("vikram.singh@email.com");
         patient2.setPassword(passwordEncoder.encode("patient123"));
-        patient2.setFirstName("Jane");
-        patient2.setLastName("Smith");
+        patient2.setFirstName("Vikram");
+        patient2.setLastName("Singh");
         // roles removed
         patient2.setPhoneNumber("+1-555-0005");
         userRepository.save(patient2);
