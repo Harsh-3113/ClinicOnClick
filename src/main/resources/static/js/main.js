@@ -176,7 +176,7 @@ function hideLoading(element, originalText) {
 // API helper functions
 const API = {
     // Note: use concise names and consistent casing
-    asyncget(url) {
+    async get(url) {
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
