@@ -33,9 +33,15 @@ public class AppointmentController {
     private UserService userService;
 
     @GetMapping
-    public String listAppointments(Model model) {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
-        model.addAttribute("appointments", appointments);
+    public String listAppointments(Model model, Principal principal) {
+        if (principal != null) {
+            com.cliniconclick.entity.User user = userService.getUserByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Logged in user not found"));
+            List<Appointment> appointments = appointmentService.getAppointmentsByUserId(user.getId());
+            model.addAttribute("appointments", appointments);
+        } else {
+            model.addAttribute("appointments", List.of());
+        }
         model.addAttribute("title", "Appointments - ClinicOnClick");
         return "appointments/list";
     }

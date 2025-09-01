@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Appointment Details - ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-stethoscope me-2"></i>ClinicOnClick
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/appointments"><i class="fas fa-calendar-check me-1"></i>APPOINTMENT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pharmacy"><i class="fas fa-pills me-1"></i>PHARMACY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/doctors"><i class="fas fa-user-md me-1"></i>DOCTOR</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about"><i class="fas fa-info-circle me-1"></i>ABOUT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>LOG IN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>SIGNUP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Back Button and Header -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-8">
+                <a href="/appointments" class="btn btn-outline-primary mb-3">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Appointments
+                </a>
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-calendar-check me-3"></i>Appointment Details
+                </h1>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group" role="group">
+                    <a th:href="@{/appointments/{id}/edit(id=${appointment.id})}" 
+                       class="btn btn-outline-primary" 
+                       th:if="${appointment.status == 'SCHEDULED' || appointment.status == 'CONFIRMED'}">
+                        <i class="fas fa-edit me-2"></i>Edit
+                    </a>
+                    <button th:if="${appointment.status == 'SCHEDULED' || appointment.status == 'CONFIRMED'}"
+                            th:onclick="'cancelAppointment(' + ${appointment.id} + ')'"
+                            class="btn btn-outline-danger">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Status Banner -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert" th:class="${'alert ' + 
+                    (appointment.status == 'SCHEDULED' ? 'alert-warning' : '') +
+                    (appointment.status == 'CONFIRMED' ? 'alert-info' : '') +
+                    (appointment.status == 'IN_PROGRESS' ? 'alert-primary' : '') +
+                    (appointment.status == 'COMPLETED' ? 'alert-success' : '') +
+                    (appointment.status == 'CANCELLED' ? 'alert-danger' : '') +
+                    (appointment.status == 'NO_SHOW' ? 'alert-secondary' : '')}">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle me-3 fa-lg"></i>
+                        <div>
+                            <strong>Status:</strong> 
+                            <span th:text="${appointment.status != null ? appointment.status : 'UNKNOWN'}">Status</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment Information -->
+        <div class="row g-4">
+            <!-- Main Appointment Details -->
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>Appointment Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-calendar text-primary me-3"></i>
+                                    <div>
+                                        <small class="text-muted">Date</small>
+                                        <div class="fw-bold" th:text="${appointment.appointmentDateTime != null ? #temporals.format(appointment.appointmentDateTime, 'EEEE, MMMM dd, yyyy') : '—'}">Date</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-clock text-primary me-3"></i>
+                                    <div>
+                                        <small class="text-muted">Time</small>
+                                        <div class="fw-bold" th:text="${appointment.appointmentDateTime != null ? #temporals.format(appointment.appointmentDateTime, 'hh:mm a') : '—'}">Time</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-user text-primary me-3"></i>
+                                    <div>
+                                        <small class="text-muted">Patient</small>
+                                        <div class="fw-bold" th:text="${appointment.user != null ? (appointment.user.firstName + ' ' + appointment.user.lastName) : 'Unknown Patient'}">Patient Name</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-user-md text-primary me-3"></i>
+                                    <div>
+                                        <small class="text-muted">Doctor</small>
+                                        <div class="fw-bold" th:text="${appointment.doctor != null && appointment.doctor.user != null ? (appointment.doctor.user.firstName + ' ' + appointment.doctor.user.lastName) : 'Unknown Doctor'}">Doctor Name</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="fas fa-stethoscope text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted">Reason for Visit</small>
+                                        <div class="fw-bold" th:text="${appointment.reason != null ? appointment.reason : 'No reason specified'}">Reason</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12" th:if="${appointment.notes != null and !appointment.notes.isEmpty()}">
+                                <div class="d-flex align-items-start mb-3">
+                                    <i class="fas fa-notes-medical text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted">Additional Notes</small>
+                                        <div class="fw-bold" th:text="${appointment.notes}">Notes</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar Information -->
+            <div class="col-md-4">
+                <!-- Doctor Information -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-user-md me-2 text-primary"></i>Doctor Information
+                        </h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user-md fa-2x"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1" th:text="${appointment.doctor != null && appointment.doctor.user != null ? (appointment.doctor.user.firstName + ' ' + appointment.doctor.user.lastName) : 'Unknown Doctor'}">Doctor Name</h6>
+                        <p class="text-primary mb-2" th:text="${appointment.doctor != null ? appointment.doctor.specialization : 'N/A'}">Specialization</p>
+                        <a th:href="@{/doctors/{id}(id=${appointment.doctor.id})}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye me-2"></i>View Profile
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Patient Information -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-user me-2 text-primary"></i>Patient Information
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-envelope text-muted me-2"></i>
+                            <small th:text="${appointment.user != null ? appointment.user.email : 'N/A'}">Email</small>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-phone text-muted me-2"></i>
+                            <small th:text="${appointment.user != null ? appointment.user.phoneNumber : 'N/A'}">Phone</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                            <small>Address not available</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointment History -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2 text-primary"></i>Appointment Timeline
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Appointment Created</h6>
+                                    <small class="text-muted">Appointment was scheduled</small>
+                                </div>
+                            </div>
+                            <div class="timeline-item" th:if="${appointment.status == 'CONFIRMED' || appointment.status == 'IN_PROGRESS' || appointment.status == 'COMPLETED'}">
+                                <div class="timeline-marker bg-info"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Appointment Confirmed</h6>
+                                    <small class="text-muted">Doctor confirmed the appointment</small>
+                                </div>
+                            </div>
+                            <div class="timeline-item" th:if="${appointment.status == 'IN_PROGRESS' || appointment.status == 'COMPLETED'}">
+                                <div class="timeline-marker bg-warning"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">In Progress</h6>
+                                    <small class="text-muted">Appointment is currently in progress</small>
+                                </div>
+                            </div>
+                            <div class="timeline-item" th:if="${appointment.status == 'COMPLETED'}">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Completed</h6>
+                                    <small class="text-muted">Appointment has been completed</small>
+                                </div>
+                            </div>
+                            <div class="timeline-item" th:if="${appointment.status == 'CANCELLED'}">
+                                <div class="timeline-marker bg-danger"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">Cancelled</h6>
+                                    <small class="text-muted">Appointment was cancelled</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 ClinicOnClick. Built with Spring Boot & Bootstrap.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        function cancelAppointment(id) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/appointments/${id}/cancel`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+    
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .timeline-content {
+            padding-left: 20px;
+            border-left: 2px solid #e9ecef;
+            padding-bottom: 20px;
+        }
+        
+        .timeline-item:last-child .timeline-content {
+            border-left: none;
+        }
+    </style>
+</body>
+</html>

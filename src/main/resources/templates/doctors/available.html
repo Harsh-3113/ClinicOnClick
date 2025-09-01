@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Available Doctors - ClinicOnClick</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-heartbeat me-2"></i>ClinicOnClick
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/appointments"><i class="fas fa-calendar-check me-1"></i>APPOINTMENT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/pharmacy"><i class="fas fa-pills me-1"></i>PHARMACY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/doctors"><i class="fas fa-user-md me-1"></i>DOCTOR</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about"><i class="fas fa-info-circle me-1"></i>ABOUT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>LOG IN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>SIGNUP</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <a href="/doctors" class="btn btn-outline-primary mb-3">
+                    <i class="fas fa-arrow-left me-2"></i>Back to All Doctors
+                </a>
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-check-circle me-3"></i>Available Doctors
+                </h1>
+                <p class="lead text-muted">Doctors currently available for appointments</p>
+            </div>
+        </div>
+
+        <!-- Doctors Grid -->
+        <div class="row">
+            <div class="col-12">
+                <div class="row g-4" id="doctorsGrid">
+                    <div th:each="doctor : ${doctors}" class="col-lg-4 col-md-6">
+                        <div class="card h-100 shadow-sm border-0 doctor-card" 
+                             th:data-specialization="${doctor.specialization}"
+                             th:data-available="${doctor.available}">
+                            <div class="card-body text-center p-4">
+                                <!-- Doctor Avatar -->
+                                <div class="mb-3">
+                                    <div class="avatar-lg bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto">
+                                        <i class="fas fa-user-md fa-2x"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Doctor Info -->
+                                <h5 class="card-title fw-bold mb-2" 
+                                    th:text="${doctor != null and doctor.user != null ? (doctor.user.firstName + ' ' + doctor.user.lastName) : 'Doctor Name'}">Doctor Name</h5>
+                                <p class="text-primary mb-2" th:text="${doctor != null and doctor.specialization != null ? doctor.specialization : 'Specialization'}">Specialization</p>
+                                
+                                <!-- Availability Status -->
+                                <div class="mb-3">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Available Now
+                                    </span>
+                                </div>
+                                
+                                <!-- Doctor Details -->
+                                <div class="text-muted small mb-3">
+                                    <div class="mb-1">
+                                        <i class="fas fa-graduation-cap me-2"></i>
+                                        <span th:text="${doctor != null and doctor.education != null ? doctor.education : 'Education'}">Education</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <i class="fas fa-briefcase me-2"></i>
+                                        <span th:text="${(doctor != null && doctor.experience != null ? doctor.experience : '0') + ' years'}">Experience</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/doctors/{id}(id=${doctor.id})}" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-2"></i>View Profile
+                                    </a>
+                                    <a th:href="@{/appointments/book?doctorId={id}(id=${doctor.id})}" 
+                                       class="btn btn-success btn-sm">
+                                        <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State -->
+                <div th:if="${#lists.isEmpty(doctors)}" class="text-center py-5">
+                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No doctors available at the moment</h5>
+                    <p class="text-muted">Check back later or view all doctors</p>
+                    <a href="/doctors" class="btn btn-primary">
+                        <i class="fas fa-undo me-2"></i>View All Doctors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 ClinicOnClick. Built with Spring Boot & Bootstrap.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

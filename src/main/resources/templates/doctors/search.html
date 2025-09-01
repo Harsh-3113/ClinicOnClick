@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Doctors - ClinicOnClick</title>
+    <title th:text="${title}">Search Doctors - ClinicOnClick</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
@@ -51,19 +51,24 @@
         <!-- Header -->
         <div class="row mb-4">
             <div class="col-md-8">
-                <h1 class="display-5 fw-bold text-primary">
-                    <i class="fas fa-user-md me-3"></i>Our Doctors
-                </h1>
-                <p class="lead text-muted">Meet our qualified and experienced medical professionals</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a href="/appointments/book" class="btn btn-primary btn-lg">
-                    <i class="fas fa-calendar-plus me-2"></i>Book Appointment
+                <a href="/doctors" class="btn btn-outline-primary mb-3">
+                    <i class="fas fa-arrow-left me-2"></i>Back to All Doctors
                 </a>
+                <h1 class="display-5 fw-bold text-primary">
+                    <i class="fas fa-search me-3"></i>Search Results
+                </h1>
+                <p class="lead text-muted">
+                    <span th:if="${query != null and !query.trim().isEmpty()}">
+                        Results for "<span th:text="${query}">query</span>"
+                    </span>
+                    <span th:if="${specialization != null and !specialization.trim().isEmpty()}">
+                        Results for <span th:text="${specialization}">specialization</span> specialization
+                    </span>
+                </p>
             </div>
         </div>
 
-        <!-- Search and Filter -->
+        <!-- Search Form -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
@@ -92,18 +97,15 @@
                                     <option value="General Medicine" th:selected="${specialization == 'General Medicine'}">General Medicine</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <select class="form-select" name="availability">
-                                    <option value="">All Availability</option>
-                                    <option value="available">Available Now</option>
-                                    <option value="weekdays">Weekdays Only</option>
-                                    <option value="weekends">Weekends Only</option>
-                                </select>
-                            </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="fas fa-search me-2"></i>Search
                                 </button>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/doctors" class="btn btn-outline-secondary w-100">
+                                    <i class="fas fa-undo me-2"></i>Clear Search
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -111,30 +113,7 @@
             </div>
         </div>
 
-        <!-- Quick Filter Buttons -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex flex-wrap gap-2 justify-content-center">
-                    <button type="button" class="btn btn-outline-primary" id="filterAll">
-                        <i class="fas fa-users me-2"></i>All Doctors
-                    </button>
-                    <button type="button" class="btn btn-outline-success" id="filterAvailable">
-                        <i class="fas fa-check-circle me-2"></i>Available Now
-                    </button>
-                    <button type="button" class="btn btn-outline-info" id="filterCardiology">
-                        <i class="fas fa-heart me-2"></i>Cardiology
-                    </button>
-                    <button type="button" class="btn btn-outline-warning" id="filterDermatology">
-                        <i class="fas fa-allergies me-2"></i>Dermatology
-                    </button>
-                    <button type="button" class="btn btn-outline-success" id="filterPediatrics">
-                        <i class="fas fa-baby me-2"></i>Pediatrics
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Doctors Grid -->
+        <!-- Search Results -->
         <div class="row">
             <div class="col-12">
                 <div class="row g-4" id="doctorsGrid">
@@ -177,15 +156,7 @@
                                         <i class="fas fa-briefcase me-2"></i>
                                         <span th:text="${(doctor != null && doctor.experience != null ? doctor.experience : '0') + ' years'}">Experience</span>
                                     </div>
-                                    <div class="mb-1">
-                                        <i class="fas fa-id-card me-2"></i>
-                                        <span th:text="${doctor != null and doctor.licenseNumber != null ? doctor.licenseNumber : 'N/A'}">License</span>
-                                    </div>
                                 </div>
-                                
-                                <!-- Doctor Bio -->
-                                <p class="card-text text-muted small mb-3" 
-                                   th:text="${#strings.abbreviate(doctor.bio, 100)}">Doctor bio...</p>
                                 
                                 <!-- Action Buttons -->
                                 <div class="d-grid gap-2">
@@ -206,52 +177,12 @@
                 
                 <!-- Empty State -->
                 <div th:if="${#lists.isEmpty(doctors)}" class="text-center py-5">
-                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">No doctors found</h5>
                     <p class="text-muted">Try adjusting your search criteria</p>
                     <a href="/doctors" class="btn btn-primary">
                         <i class="fas fa-undo me-2"></i>View All Doctors
                     </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="row mt-5">
-            <div class="col-md-3">
-                <div class="card bg-primary text-white text-center">
-                    <div class="card-body">
-                        <i class="fas fa-user-md fa-2x mb-2"></i>
-                        <h4 th:text="${#lists.size(doctors)}">0</h4>
-                        <p class="mb-0">Total Doctors</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-success text-white text-center">
-                    <div class="card-body">
-                        <i class="fas fa-check-circle fa-2x mb-2"></i>
-                        <h4 th:text="${#lists.size(doctors.?[available == true])}">0</h4>
-                        <p class="mb-0">Available Now</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-info text-white text-center">
-                    <div class="card-body">
-                        <i class="fas fa-stethoscope fa-2x mb-2"></i>
-                        <h4 th:text="${#lists.size(doctors)}">0</h4>
-                        <p class="mb-0">Specializations</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card bg-warning text-white text-center">
-                    <div class="card-body">
-                        <i class="fas fa-star fa-2x mb-2"></i>
-                        <h4 th:text="${#lists.size(doctors.?[experience != null])}">0</h4>
-                        <p class="mb-0">Profiles with Experience</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -266,85 +197,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/main.js}"></script>
-    <script>
-        // Filter functionality for availability
-        document.querySelector('select[name="availability"]').addEventListener('change', function() {
-            const availability = this.value;
-            filterDoctorsByAvailability(availability);
-        });
-
-        // Filter functionality for quick filter buttons
-        document.querySelectorAll('[id^="filter"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const filterType = this.id.replace('filter', '');
-                filterDoctors(filterType);
-                
-                // Update active button
-                document.querySelectorAll('[id^="filter"]').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        function filterDoctors(filterType) {
-            const doctorCards = document.querySelectorAll('.doctor-card');
-            doctorCards.forEach(card => {
-                const specialization = card.dataset.specialization;
-                const isAvailable = card.dataset.available === 'true';
-                
-                let shouldShow = true;
-                
-                switch(filterType) {
-                    case 'All':
-                        shouldShow = true;
-                        break;
-                    case 'Available':
-                        shouldShow = isAvailable;
-                        break;
-                    case 'Cardiology':
-                        shouldShow = specialization === 'Cardiology';
-                        break;
-                    case 'Dermatology':
-                        shouldShow = specialization === 'Dermatology';
-                        break;
-                    case 'Pediatrics':
-                        shouldShow = specialization === 'Pediatrics';
-                        break;
-                }
-                
-                card.style.display = shouldShow ? '' : 'none';
-            });
-        }
-
-        function filterDoctorsByAvailability(availability) {
-            const doctorCards = document.querySelectorAll('.doctor-card');
-            doctorCards.forEach(card => {
-                const isAvailable = card.dataset.available === 'true';
-                
-                if (availability === 'available' && !isAvailable) {
-                    card.style.display = 'none';
-                } else if (availability === 'weekdays' || availability === 'weekends') {
-                    // This could be enhanced with actual availability data
-                    card.style.display = '';
-                } else {
-                    card.style.display = '';
-                }
-            });
-        }
-
-        // Add hover effects
-        document.querySelectorAll('.doctor-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-                this.style.transition = 'transform 0.3s ease';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-
-        // Initialize with all doctors visible
-        document.getElementById('filterAll').classList.add('active');
-    </script>
 </body>
 </html>

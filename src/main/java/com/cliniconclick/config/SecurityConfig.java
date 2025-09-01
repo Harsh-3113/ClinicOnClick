@@ -27,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/home", "/about", "/contact", "/login", "/register", "/css/**", "/js/**", "/images/**", "/h2-console/**").permitAll()
+                .requestMatchers("/", "/home", "/about", "/contact", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/appointments/**", "/dashboard/**").authenticated()
                 .anyRequest().permitAll()
             )
@@ -39,9 +39,6 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutSuccessUrl("/")
                 .permitAll()
-            )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
             )
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions.sameOrigin())
